@@ -1,12 +1,20 @@
+import { async } from 'regenerator-runtime';
 import {API_URL} from './config.js'
 import {getJSON} from './helpers.js'
 
+//MVC ARCHITECTURE NOTES: MODEL IS ONLY CONCERNED WITH BUSINESS LOGIC, SUCH AS FETCHING DATA FROM API
+//MODEL IS NOT AWARE OF CONTROLLER OR VIEWS
+
 export const state = {
-  recipe: {}
+  recipe: {},
+  search: {
+    query: '',
+    results: [],
+  },
 }
 export const loadRecipe = async function(id) {
   try {
-    const data = await getJSON(`${API_URL}/${id}`);
+    const data = await getJSON(`${API_URL}${id}`);
 
     const {recipe} = data.data;
     state.recipe = {
@@ -22,8 +30,27 @@ export const loadRecipe = async function(id) {
     console.log(state.recipe)
   } catch (error) {
     //Temporary error handling
-    console.error(`${error} KABOOM BOOM`);
+    console.error(`${error} 💥💥💥`);
     throw error;
   }
-  
-}
+};
+
+export const loadSearchResults = async function(query) {
+  try {
+    state.search.query = query;
+    const data = await getJSON(`${API_URL}?search=${query}`)
+    console.log(data)  
+
+    state.search.results = data.data.recipes.map(recipe => {
+      return {
+          id: recipe.id,
+          title: recipe.title,
+          publisher: recipe.publisher,
+          image: recipe.image_url,
+      };
+    });
+  } catch (error) {
+    console.error(`${error} 💥💥💥`);
+    throw error;
+  }
+};
