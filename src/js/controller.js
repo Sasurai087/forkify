@@ -20,10 +20,14 @@ const controlRecipes = async function () {
     //Step 2. Rendering recipe
     recipeView.render(model.state.recipe);
   
-  } catch (err) {
-    alert(err)
+  } catch (error) {
+    console.log(error);
+    recipeView.renderError();
   }
 };
 
-//Runs controlRecipes when hash changes (user clicks on recipe) or when page loads (user inputs url)
-['hashchange', 'load'].forEach(ev =>window.addEventListener(ev, controlRecipes));
+const init = function() {
+  recipeView.addHandlerRender(controlRecipes)
+}
+
+init();

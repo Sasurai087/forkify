@@ -460,12 +460,15 @@ const controlRecipes = async function () {
     await _modelJs.loadRecipe(id);
     // Step 2. Rendering recipe
     _viewsRecipeViewJsDefault.default.render(_modelJs.state.recipe);
-  } catch (err) {
-    alert(err);
+  } catch (error) {
+    console.log(error);
+    _viewsRecipeViewJsDefault.default.renderError();
   }
 };
-// Runs controlRecipes when hash changes (user clicks on recipe) or when page loads (user inputs url)
-['hashchange', 'load'].forEach(ev => window.addEventListener(ev, controlRecipes));
+const init = function () {
+  _viewsRecipeViewJsDefault.default.addHandlerRender(controlRecipes);
+};
+init();
 
 },{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","core-js/stable":"1PFvP","regenerator-runtime":"62Qib","./model.js":"1hp6y","./views/recipeView.js":"9e6b9"}],"5gA8y":[function(require,module,exports) {
 "use strict";
@@ -12449,6 +12452,7 @@ const loadRecipe = async function (id) {
   } catch (error) {
     // Temporary error handling
     console.error(`${error} KABOOM BOOM`);
+    throw error;
   }
 };
 
@@ -12489,25 +12493,12 @@ const getJSON = async function (url) {
   }
 };
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y","./config.js":"6pr2F"}],"9e6b9":[function(require,module,exports) {
+},{"./config.js":"6pr2F","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"9e6b9":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _urlImgIconsSvg = require('url:../../img/icons.svg');
 var _urlImgIconsSvgDefault = _parcelHelpers.interopDefault(_urlImgIconsSvg);
 var _fractional = require('fractional');
-function _defineProperty(obj, key, value) {
-  if ((key in obj)) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
 function _classPrivateFieldGet(receiver, privateMap) {
   var descriptor = _classExtractFieldDescriptor(receiver, privateMap, "get");
   return _classApplyDescriptorGet(receiver, descriptor);
@@ -12547,6 +12538,8 @@ function _classApplyDescriptorSet(receiver, descriptor, value) {
 }
 var _parentElement = new WeakMap();
 var _data = new WeakMap();
+var _errorMessage = new WeakMap();
+var _message = new WeakMap();
 var _clear = new WeakSet();
 var _generateMarkup = new WeakSet();
 var _generateMarkupIngredient = new WeakSet();
@@ -12563,16 +12556,13 @@ class RecipeView {
       writable: true,
       value: void 0
     });
-    _defineProperty(this, "renderSpinner", function () {
-      const markup = `
-      <div class="spinner">
-        <svg>
-          <use href="${_urlImgIconsSvgDefault.default}#icon-loader"></use>
-        </svg>
-      </div>
-    `;
-      _classPrivateFieldGet(this, _parentElement).innerHTML = '';
-      _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+    _errorMessage.set(this, {
+      writable: true,
+      value: 'We could not find that recipe. Please try another one!'
+    });
+    _message.set(this, {
+      writable: true,
+      value: ''
     });
   }
   render(data) {
@@ -12583,6 +12573,48 @@ class RecipeView {
     _classPrivateMethodGet(this, _clear, _clear2).call(this);
     // Insert markup inside recipeContainer, before its first child
     _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+  }
+  renderSpinner() {
+    const markup = `
+      <div class="spinner">
+        <svg>
+          <use href="${_urlImgIconsSvgDefault.default}#icon-loader"></use>
+        </svg>
+      </div>
+    `;
+    _classPrivateMethodGet(this, _clear, _clear2).call(this);
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+  }
+  renderMessage(message = _classPrivateFieldGet(this, _message)) {
+    const markup = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${_urlImgIconsSvgDefault.default}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div>
+  `;
+  }
+  renderError(message = _classPrivateFieldGet(this, _errorMessage)) {
+    const markup = `
+      <div class="error">
+        <div>
+          <svg>
+            <use href="${_urlImgIconsSvgDefault.default}#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `;
+    _classPrivateMethodGet(this, _clear, _clear2).call(this);
+    _classPrivateFieldGet(this, _parentElement).insertAdjacentHTML('afterbegin', markup);
+  }
+  /*PUBLISHER function that needs access to SUBSCRIBER (controlRecipes within controller.js)*/
+  addHandlerRender(handler) {
+    // Runs controlRecipes when hash changes (user clicks on recipe) or when page loads (user inputs url)
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
 }
 function _clear2() {

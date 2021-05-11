@@ -4,6 +4,8 @@ import {Fraction} from 'fractional';
 class RecipeView {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #errorMessage = 'We could not find that recipe. Please try another one!';
+  #message = '';
 
   render(data){
     //recipe data from model.state.recipe is stored in #data
@@ -19,7 +21,7 @@ class RecipeView {
     this.#parentElement.innerHTML = '';
   }
 
-  renderSpinner = function() {
+  renderSpinner() {
     const markup = `
       <div class="spinner">
         <svg>
@@ -27,9 +29,43 @@ class RecipeView {
         </svg>
       </div>
     `
-    this.#parentElement.innerHTML = '';
+    this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup)
   };
+
+  renderMessage(message = this.#message) {
+  const markup = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${icons}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div>
+  `;
+  }
+
+  renderError(message = this.#errorMessage){
+    const markup = `
+      <div class="error">
+        <div>
+          <svg>
+            <use href="${icons}#icon-alert-triangle"></use>
+          </svg>
+        </div>
+        <p>${message}</p>
+      </div>
+    `
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+//PUBLISHER function that needs access to SUBSCRIBER (controlRecipes within controller.js)
+  addHandlerRender(handler) {
+  //Runs controlRecipes when hash changes (user clicks on recipe) or when page loads (user inputs url)
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
 
   #generateMarkup() {
     return `
