@@ -53,7 +53,7 @@
 94C:\Coding\Projects Showcase\Forkify\node_modules\core-js\modules\esnext.async-iterator.find.js121436361000000000 0
 56C:\Coding\Projects Showcase\Forkify\node_modules\asn1.js132641546721525415 1
 84C:\Coding\Projects Showcase\Forkify\node_modules\defaults\node_modules\clone\LICENSE130657054670000000 0
-40C:\Coding\Projects Showcase\Forkify\dist132652560997067530 1
+40C:\Coding\Projects Showcase\Forkify\dist132652705613746035 1
 67C:\Coding\Projects Showcase\Forkify\node_modules\lodash\throttle.js121436361000000000 0
 76C:\Coding\Projects Showcase\Forkify\node_modules\hash.js\lib\hash\sha\256.js121436361000000000 0
 59C:\Coding\Projects Showcase\Forkify\node_modules\uuid\v4.js121436361000000000 0
@@ -1865,7 +1865,7 @@
 66C:\Coding\Projects Showcase\Forkify\node_modules\lodash\isArray.js121436361000000000 0
 98C:\Coding\Projects Showcase\Forkify\node_modules\regenerate-unicode-properties\Script\Bhaiksuki.js121436361000000000 0
 110C:\Coding\Projects Showcase\Forkify\node_modules\postcss-unique-selectors\node_modules\supports-color\index.js121436361000000000 0
-63C:\Coding\Projects Showcase\Forkify\dist\index.1206e35b.css.map132652560996747711 0
+63C:\Coding\Projects Showcase\Forkify\dist\index.1206e35b.css.map132652705613706056 0
 59C:\Coding\Projects Showcase\Forkify\node_modules\fractional132651624082071784 1
 83C:\Coding\Projects Showcase\Forkify\node_modules\@parcel\events\lib\ValueEmitter.js121436361000000000 0
 74C:\Coding\Projects Showcase\Forkify\node_modules\vm-browserify\.travis.yml121436361000000000 0
@@ -3501,7 +3501,7 @@
 80C:\Coding\Projects Showcase\Forkify\node_modules\which-boxed-primitive\README.md121436361000000000 0
 71C:\Coding\Projects Showcase\Forkify\node_modules\util-deprecate\node.js130614195410000000 0
 118C:\Coding\Projects Showcase\Forkify\node_modules\postcss-ordered-values\node_modules\postcss\docs\guidelines\plugin.md121436361000000000 0
-59C:\Coding\Projects Showcase\Forkify\dist\index.1206e35b.css132652560996697739 0
+59C:\Coding\Projects Showcase\Forkify\dist\index.1206e35b.css132652705613636093 0
 84C:\Coding\Projects Showcase\Forkify\node_modules\postcss-reduce-initial\package.json121436361000000000 0
 75C:\Coding\Projects Showcase\Forkify\node_modules\which-boxed-primitive\test132641546642181766 1
 67C:\Coding\Projects Showcase\Forkify\node_modules\sha.js\.travis.yml132641546618647280 0
@@ -8128,7 +8128,7 @@
 81C:\Coding\Projects Showcase\Forkify\node_modules\public-encrypt\test\rsa.1024.pub121436361000000000 0
 101C:\Coding\Projects Showcase\Forkify\node_modules\postcss-reduce-transforms\node_modules\color-convert132641546647181436 1
 82C:\Coding\Projects Showcase\Forkify\node_modules\public-encrypt\test\rsa.pass.priv121436361000000000 0
-51C:\Coding\Projects Showcase\Forkify\dist\index.html132652560996697739 0
+51C:\Coding\Projects Showcase\Forkify\dist\index.html132652705613626099 0
 94C:\Coding\Projects Showcase\Forkify\node_modules\@babel\traverse\lib\path\generated\asserts.js121012626000000000 0
 81C:\Coding\Projects Showcase\Forkify\node_modules\public-encrypt\test\test_key.pem121436361000000000 0
 97C:\Coding\Projects Showcase\Forkify\node_modules\postcss-colormin\node_modules\color-name\LICENSE130953959930000000 0
@@ -20025,7 +20025,7 @@
 68C:\Coding\Projects Showcase\Forkify\node_modules\argparse\lib\action132641546715219019 1
 81C:\Coding\Projects Showcase\Forkify\node_modules\argparse\lib\action_container.js131196246910000000 0
 70C:\Coding\Projects Showcase\Forkify\node_modules\argparse\lib\argument132641546723164477 1
-61C:\Coding\Projects Showcase\Forkify\dist\favicon.80934ffe.png132652560996407904 0
+61C:\Coding\Projects Showcase\Forkify\dist\favicon.80934ffe.png132652705613386236 0
 70C:\Coding\Projects Showcase\Forkify\node_modules\argparse\lib\const.js130974910080000000 0
 73C:\Coding\Projects Showcase\Forkify\node_modules\@parcel\reporter-cli\lib132641546702896078 1
 74C:\Coding\Projects Showcase\Forkify\node_modules\argparse\lib\namespace.js130992214460000000 0
@@ -20050,7 +20050,7 @@
 72C:\Coding\Projects Showcase\Forkify\node_modules\ansi-regex\package.json121436361000000000 0
 69C:\Coding\Projects Showcase\Forkify\node_modules\ansi-regex\readme.md121436361000000000 0
 69C:\Coding\Projects Showcase\Forkify\node_modules\ansi-html\.npmignore131219268910000000 0
-58C:\Coding\Projects Showcase\Forkify\dist\index.250b04c7.js132652560996767704 0
+58C:\Coding\Projects Showcase\Forkify\dist\index.250b04c7.js132652705613696064 0
 67C:\Coding\Projects Showcase\Forkify\node_modules\ansi-html\index.js131278040780000000 0
 71C:\Coding\Projects Showcase\Forkify\node_modules\ansi-html\package.json131278040780000000 0
 68C:\Coding\Projects Showcase\Forkify\node_modules\ansi-html\README.md130925745480000000 0
@@ -21232,7 +21232,7 @@
 76C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\parse-stream.js121436361000000000 0
 76C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\parse-string.js121436361000000000 0
 68C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\toml.js121436361000000000 0
-58C:\Coding\Projects Showcase\Forkify\dist\logo.5d271741.png132652560996417902 0
+58C:\Coding\Projects Showcase\Forkify\dist\logo.5d271741.png132652705613386236 0
 83C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\lib\create-datetime.js121436361000000000 0
 79C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\lib\create-time.js121436361000000000 0
 78C:\Coding\Projects Showcase\Forkify\node_modules\@iarna\toml\lib\format-num.js121436361000000000 0
@@ -21964,6 +21964,6 @@
 59C:\Coding\Projects Showcase\Forkify\node_modules\.bin\which132641546811592346 0
 63C:\Coding\Projects Showcase\Forkify\node_modules\.bin\which.cmd132641546811592346 0
 63C:\Coding\Projects Showcase\Forkify\node_modules\.bin\which.ps1132641546811572356 0
-59C:\Coding\Projects Showcase\Forkify\dist\icons.c4b52749.svg132652560996407904 0
-59C:\Coding\Projects Showcase\Forkify\dist\icons.d4a14980.svg132652560996687746 0
-62C:\Coding\Projects Showcase\Forkify\dist\index.250b04c7.js.map132652560997027553 0
+59C:\Coding\Projects Showcase\Forkify\dist\icons.c4b52749.svg132652705613416219 0
+59C:\Coding\Projects Showcase\Forkify\dist\icons.d4a14980.svg132652705613416219 0
+62C:\Coding\Projects Showcase\Forkify\dist\index.250b04c7.js.map132652705613736041 0
