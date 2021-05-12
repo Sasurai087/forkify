@@ -2,9 +2,10 @@ import { async } from 'regenerator-runtime';
 import {API_URL, RESULTS_PER_PAGE} from './config.js'
 import {getJSON} from './helpers.js'
 
-//MVC ARCHITECTURE NOTES: MODEL IS ONLY CONCERNED WITH BUSINESS LOGIC, SUCH AS FETCHING DATA FROM API
+//MVC ARCHITECTURE NOTES: MODEL IS ONLY CONCERNED WITH BUSINESS LOGIC, SUCH AS FETCHING DATA FROM API OR MANAGING STATE
 //MODEL IS NOT AWARE OF CONTROLLER OR VIEWS
 
+//STATE
 export const state = {
   recipe: {},
   search: {
@@ -14,6 +15,8 @@ export const state = {
     resultsPerPage: RESULTS_PER_PAGE,
   },
 }
+
+//RECIPE FETCH
 export const loadRecipe = async function(id) {
   try {
     const data = await getJSON(`${API_URL}${id}`);
@@ -29,7 +32,6 @@ export const loadRecipe = async function(id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients
     }
-    console.log(state.recipe)
   } catch (error) {
     //Temporary error handling
     console.error(`${error} 💥💥💥`);
@@ -37,11 +39,11 @@ export const loadRecipe = async function(id) {
   }
 };
 
+//SEARCH FUNCTIONS
 export const loadSearchResults = async function(query) {
   try {
     state.search.query = query;
     const data = await getJSON(`${API_URL}?search=${query}`)
-    console.log(data)  
 
     state.search.results = data.data.recipes.map(recipe => {
       return {
@@ -62,6 +64,15 @@ export const getSearchResultsPage = function(page = state.search.page) {
 
   const start = (page - 1) * state.search.resultsPerPage // 0;
   const end = page * state.search.resultsPerPage// 9;
-  console.log(start, end)
   return state.search.results.slice(start, end);
+}
+
+//SERVINGS
+export const updateServings = function(newServings) {
+  state.recipe.ingredients.forEach(ing => {
+    ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
+    // New Quantity = old Quantity * new Servings / oldServing
+  });
+
+  state.recipe.servings = newServings;
 }

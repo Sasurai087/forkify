@@ -4,7 +4,7 @@
   "description": "Food recipe search application",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --dist-dir dist --public-url ./"
   },
   "repository": {
     "type": "git",
@@ -17,13 +17,10 @@
   },
   "homepage": "https://github.com/Sasurai087/forkify#readme",
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.0.0-nightly.652",
-    "parcel": "^2.0.0-nightly.650",
-    "sass": "^1.32.12"
+    "parcel": "^2.0.0-beta.1",
+    "sass": "^1.32.13"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-private-methods": "^7.13.0",
     "core-js": "^3.11.1",
     "fractional": "^1.0.0",
     "regenerator-runtime": "^0.13.7"

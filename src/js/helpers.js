@@ -4,7 +4,7 @@ import { TIMEOUT_SECONDS } from './config.js';
 let timeoutId;
 const timeout = function (s) {
   return new Promise(function (_, reject) {
-    timeoutID = setTimeout(function () {
+    timeoutId = setTimeout(function () {
       reject(new Error(`Request took too long! Timeout after ${s} seconds`));
     }, s * 1000);
   });
@@ -15,7 +15,7 @@ export const getJSON = async function(url){
     const fetchPromise = fetch(url);
     const res = await Promise.race([fetchPromise, timeout(TIMEOUT_SECONDS)]);
     // If we are here then fetch won the race so cancel the timeout
-    clearTimeout(timeoutID);
+    clearTimeout(timeoutId);
 
     const data = await res.json();
 

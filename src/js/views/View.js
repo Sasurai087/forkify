@@ -17,7 +17,41 @@ export default class View {
     this._clear();
     // Insert markup inside recipeContainer, before its first child
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
+  };
+
+  //Use this to 'update' sections of a view, instead of re-rendering the whole thing
+  update(data){
+    this._data = data;
+    
+    //Create a new markup and compare to the old one, and only change elements that are new
+    const newMarkup = this._generateMarkup();
+    //Take newMarkup and turn it into a virtualDOM that lives in memory
+    const newDom = document.createRange().createContextualFragment(newMarkup);
+    //Select all elements of the new DOM, as well as old DOM
+    const newElements = Array.from(newDom.querySelectorAll('*'));
+    const curElements = Array.from(this._parentElement.querySelectorAll('*'));
+
+    newElements.forEach((newEl, i) => {
+      const curEl = curElements[i];
+
+      //Updates changed TEXT
+      if(
+        !newEl.isEqualNode(curEl) && 
+        newEl.firstChild?.nodeValue.trim() !== ''
+        ) {
+          curEl.textContent = newEl.textContent;
+      }
+
+      //Updates changed ATTRIBUTES
+      if(!newEl.isEqualNode(curEl)){
+        Array.from(newEl.attributes).forEach(attr => 
+          curEl.setAttribute(attr.name, attr.value)
+          );
+        };
+      
+      //Note: InnerHTML may be used as an alternative to textContent and setAttribute. Have not tested.
+    });
+  };
 
   _clear(){
     this._parentElement.innerHTML = '';

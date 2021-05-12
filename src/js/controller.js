@@ -12,27 +12,31 @@ if(module.hot) {
   module.hot.accept();
 }
 
-//MVC ARCHITECTURE NOTES: CONTROLLER HANDLES USER INPUT AND ENACTS FUNCTIONS FROM MODEL AND VIEWS
+//MVC ARCHITECTURE NOTES: CONTROLLER HANDLES USER INPUT AND ENACTS FUNCTIONS FROM MODEL AND VIEWS; PUT SIMPLY, IT DELEGATES;
 //CODE RELATED TO DOM OR FETCHES DO NOT GO HERE
 
 const controlRecipes = async function () {
   try {
-    const id = window.location.hash.slice(1);
+    const id = window.location.hash.slice(1) || '5ed6604691c37cdc054bd01c';
   
     //Load Spinner while awaiting recipe
     if(!id) return;
     recipeView.renderSpinner()
 
-    // Step 1. Load recipe
+    // 0. Update resultsView to mark selected search result
+    resultsView.update(model.getSearchResultsPage());
+
+    // 1. Load recipe
     await model.loadRecipe(id);
 
-    //Step 2. Rendering recipe
+    // 2. Rendering recipe
     recipeView.render(model.state.recipe);
-  
+
   } catch (error) {
     console.log(error);
     recipeView.renderError();
   }
+
 };
 
 const controlSearchResults = async function() {
@@ -40,7 +44,7 @@ const controlSearchResults = async function() {
     resultsView.renderSpinner();
 
     // 1. Get search query
-    const query = searchView.getQuery();
+    const query = searchView.getQuery() || 'curry';
     if(!query) return;
     
     // 2. Load search results
@@ -58,6 +62,7 @@ const controlSearchResults = async function() {
 };
 
 const controlPagination = function(goToPage) {
+
   // 1. Render NEW results
   resultsView.render(model.getSearchResultsPage(goToPage));
 
@@ -65,9 +70,19 @@ const controlPagination = function(goToPage) {
   paginationView.render(model.state.search);
 };
 
+const controlServings = function(newServings){
+  // Update the recipe servings (within state)
+  model.updateServings(newServings);
+
+  // Update the recipe view
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
+}
+
 //Initialization
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerCLick(controlPagination);
 }
