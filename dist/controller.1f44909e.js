@@ -447,6 +447,8 @@ var _resultsView = _interopRequireDefault(require("./views/resultsView.js"));
 
 var _paginationView = _interopRequireDefault(require("./views/paginationView.js"));
 
+var _bookmarksView = _interopRequireDefault(require("./views/bookmarksView.js"));
+
 require("core-js/stable");
 
 var _regeneratorRuntime = require("regenerator-runtime");
@@ -477,11 +479,14 @@ const controlRecipes = async function () {
 
     await model.loadRecipe(id); // 2. Rendering recipe
 
-    _recipeView.default.render(model.state.recipe);
-  } catch (error) {
-    console.log(error);
+    _recipeView.default.render(model.state.recipe); // 3. Update bookmarks
 
+
+    _bookmarksView.default.update(model.state.bookmarks);
+  } catch (error) {
     _recipeView.default.renderError();
+
+    console.log(error);
   }
 };
 
@@ -519,13 +524,31 @@ const controlServings = function (newServings) {
   // recipeView.render(model.state.recipe);
 
   _recipeView.default.update(model.state.recipe);
+};
+
+const controlAddBookmark = function () {
+  // 1. Add or Remove bookmark
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);else model.deleteBookmark(model.state.recipe.id); // 2. Update recipe view
+
+  _recipeView.default.update(model.state.recipe); // 3. Render bookmarks
+
+
+  _bookmarksView.default.render(model.state.bookmarks);
+};
+
+const controlBookmarks = function () {
+  _bookmarksView.default.render(model.state.bookmarks);
 }; //Initialization
 
 
 const init = function () {
+  _bookmarksView.default.addHandlerRender(controlBookmarks);
+
   _recipeView.default.addHandlerRender(controlRecipes);
 
   _recipeView.default.addHandlerUpdateServings(controlServings);
+
+  _recipeView.default.addHandlerAddBookmark(controlAddBookmark);
 
   _searchView.default.addHandlerSearch(controlSearchResults);
 
@@ -533,13 +556,17 @@ const init = function () {
 };
 
 init();
-},{"./model.js":"aabf248f40f7693ef84a0cb99f385d1f","./views/recipeView.js":"bcae1aced0301b01ccacb3e6f7dfede8","./views/searchView.js":"c5d792f7cac03ef65de30cc0fbb2cae7","./views/resultsView.js":"eacdbc0d50ee3d2819f3ee59366c2773","./views/paginationView.js":"d2063f3e7de2e4cdacfcb5eb6479db05","core-js/stable":"365c275b2aeb4e58604c85c803750508","regenerator-runtime":"e155e0d3930b156f86c48e8d05522b16"}],"aabf248f40f7693ef84a0cb99f385d1f":[function(require,module,exports) {
+
+const clearBookmarks = function () {
+  localStorage.clear('bookmarks');
+};
+},{"./model.js":"aabf248f40f7693ef84a0cb99f385d1f","./views/recipeView.js":"bcae1aced0301b01ccacb3e6f7dfede8","./views/searchView.js":"c5d792f7cac03ef65de30cc0fbb2cae7","./views/resultsView.js":"eacdbc0d50ee3d2819f3ee59366c2773","./views/paginationView.js":"d2063f3e7de2e4cdacfcb5eb6479db05","core-js/stable":"365c275b2aeb4e58604c85c803750508","regenerator-runtime":"e155e0d3930b156f86c48e8d05522b16","./views/bookmarksView.js":"7ed9311e216aa789713f70ebeec3ed40"}],"aabf248f40f7693ef84a0cb99f385d1f":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateServings = exports.getSearchResultsPage = exports.loadSearchResults = exports.loadRecipe = exports.state = void 0;
+exports.deleteBookmark = exports.addBookmark = exports.updateServings = exports.getSearchResultsPage = exports.loadSearchResults = exports.loadRecipe = exports.state = void 0;
 
 var _regeneratorRuntime = require("regenerator-runtime");
 
@@ -557,7 +584,8 @@ const state = {
     results: [],
     page: 1,
     resultsPerPage: _config.RESULTS_PER_PAGE
-  }
+  },
+  bookmarks: []
 }; //RECIPE FETCH
 
 exports.state = state;
@@ -578,6 +606,7 @@ const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients
     };
+    if (state.bookmarks.some(bookmark => bookmark.id === id)) state.recipe.bookmarked = true;else state.recipe.bookmarked = false;
   } catch (error) {
     //Temporary error handling
     console.error(`${error} 💥💥💥`);
@@ -599,7 +628,9 @@ const loadSearchResults = async function (query) {
         publisher: recipe.publisher,
         image: recipe.image_url
       };
-    });
+    }); //On every new search, reset page to 1
+
+    state.search.page = 1;
   } catch (error) {
     console.error(`${error} 💥💥💥`);
     throw error;
@@ -625,9 +656,42 @@ const updateServings = function (newServings) {
     ing.quantity = ing.quantity * newServings / state.recipe.servings; // New Quantity = old Quantity * new Servings / oldServing
   });
   state.recipe.servings = newServings;
-};
+}; //BOOKMARKS
+
 
 exports.updateServings = updateServings;
+
+const persistBookmarks = function () {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
+const addBookmark = function (recipe) {
+  // Add bookmark
+  state.bookmarks.push(recipe); // Mark current recipe as bookmark
+
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+  persistBookmarks();
+};
+
+exports.addBookmark = addBookmark;
+
+const deleteBookmark = function (id) {
+  // Delete bookmark
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  state.bookmarks.splice(index, 1); // Mark current recipe as 'not' bookmarked
+
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
+  persistBookmarks();
+};
+
+exports.deleteBookmark = deleteBookmark;
+
+const init = function () {
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+init();
 },{"regenerator-runtime":"e155e0d3930b156f86c48e8d05522b16","./config.js":"09212d541c5c40ff2bd93475a904f8de","./helpers.js":"0e8dcd8a4e1c61cf18f78e1c2563655d"}],"e155e0d3930b156f86c48e8d05522b16":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
@@ -1403,7 +1467,7 @@ var _regeneratorRuntime = require("regenerator-runtime");
 
 var _config = require("./config.js");
 
-let timeoutId;
+let timeoutId = '';
 
 const timeout = function (s) {
   return new Promise(function (_, reject) {
@@ -1475,6 +1539,14 @@ class RecipeView extends _View.default {
     });
   }
 
+  addHandlerAddBookmark(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+      handler();
+    });
+  }
+
   _generateMarkup() {
     return `
     <figure class="recipe__fig">
@@ -1516,9 +1588,9 @@ class RecipeView extends _View.default {
         <div class="recipe__user-generated">
         </div>
         
-        <button class="btn--round">
+        <button class="btn--round btn--bookmark">
           <svg class="">
-            <use href="${_icons.default}#icon-bookmark-fill"></use>
+            <use href="${_icons.default}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
           </svg>
         </button>
       </div>
@@ -1595,14 +1667,15 @@ class View {
     _defineProperty(this, "_data", void 0);
   }
 
-  render(data) {
+  render(data, render = true) {
     //Throw error if there is no data, or if received data is blank
     if (!data || Array.isArray(data) && data.length === 0) return this.renderError(); //recipe data from model.state.recipe is stored in #data
 
     this._data = data;
 
-    const markup = this._generateMarkup(); // Emptying container to remove 'please search for recipe' message
+    const markup = this._generateMarkup();
 
+    if (!render) return markup; // Emptying container to remove 'please search for recipe' message
 
     this._clear(); // Insert markup inside recipeContainer, before its first child
 
@@ -2219,13 +2292,12 @@ exports.default = void 0;
 
 var _View = _interopRequireDefault(require("./View.js"));
 
-var _icons = _interopRequireDefault(require("url:../../img/icons.svg"));
+var _previewView = _interopRequireDefault(require("./previewView.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//url param is needed for Parcel2 to import static files
 class ResultsView extends _View.default {
   constructor(...args) {
     super(...args);
@@ -2238,20 +2310,46 @@ class ResultsView extends _View.default {
   }
 
   _generateMarkup() {
-    return this._data.map(this._generateMarkupPreview).join('');
+    return this._data.map(result => _previewView.default.render(result, false)).join('');
   }
 
-  _generateMarkupPreview(result) {
+}
+
+var _default = new ResultsView();
+
+exports.default = _default;
+},{"./View.js":"61b7a1b097e16436be3d54c2f1828c73","./previewView.js":"e4d6583325a8b6c9380670c4f233bf07"}],"e4d6583325a8b6c9380670c4f233bf07":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _View = _interopRequireDefault(require("./View.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class PreviewView extends _View.default {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "_parentElement", '');
+  }
+
+  _generateMarkup() {
     const id = window.location.hash.slice(1);
     return `
       <li class="preview">
-        <a class="preview__link ${result.id === id ? 'preview__link--active' : ''}" href="#${result.id}">
+        <a class="preview__link ${this._data.id === id ? 'preview__link--active' : ''}" href="#${this._data.id}">
           <figure class="preview__fig">
-            <img src="${result.image}" alt="${result.title}" />
+            <img src="${this._data.image}" alt="${this._data.title}" />
           </figure>
           <div class="preview__data">
-            <h4 class="preview__title">${result.title}</h4>
-            <p class="preview__publisher">${result.publisher}</p>
+            <h4 class="preview__title">${this._data.title}</h4>
+            <p class="preview__publisher">${this._data.publisher}</p>
           </div>
         </a>
       </li>
@@ -2260,10 +2358,10 @@ class ResultsView extends _View.default {
 
 }
 
-var _default = new ResultsView();
+var _default = new PreviewView();
 
 exports.default = _default;
-},{"./View.js":"61b7a1b097e16436be3d54c2f1828c73","url:../../img/icons.svg":"01bc0f7c3d3b102b8e46f18db9a2a826"}],"d2063f3e7de2e4cdacfcb5eb6479db05":[function(require,module,exports) {
+},{"./View.js":"61b7a1b097e16436be3d54c2f1828c73"}],"d2063f3e7de2e4cdacfcb5eb6479db05":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14211,6 +14309,46 @@ $({ target: 'URL', proto: true, enumerable: true }, {
   }
 });
 
-},{"../internals/export":"10044f24ecae4059b4af184e71d3fba2"}]},{},["10b4d96de3192c84d8328ae548c3939d","ccb05b437febf927f36e55f84154ab6f","175e469a7ea7db1c8c0744d04372621f"], null)
+},{"../internals/export":"10044f24ecae4059b4af184e71d3fba2"}],"7ed9311e216aa789713f70ebeec3ed40":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _View = _interopRequireDefault(require("./View.js"));
+
+var _previewView = _interopRequireDefault(require("./previewView.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+class BookmarksView extends _View.default {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "_parentElement", document.querySelector('.bookmarks__list'));
+
+    _defineProperty(this, "_errorMessage", 'No bookmarks yet. Try bookmarking a recipe.');
+
+    _defineProperty(this, "_message", '');
+  }
+
+  addHandlerRender(handler) {
+    window.addEventListener('load', handler);
+  }
+
+  _generateMarkup() {
+    return this._data.map(bookmark => _previewView.default.render(bookmark, false)).join('');
+  }
+
+}
+
+var _default = new BookmarksView();
+
+exports.default = _default;
+},{"./View.js":"61b7a1b097e16436be3d54c2f1828c73","./previewView.js":"e4d6583325a8b6c9380670c4f233bf07"}]},{},["10b4d96de3192c84d8328ae548c3939d","ccb05b437febf927f36e55f84154ab6f","175e469a7ea7db1c8c0744d04372621f"], null)
 
 //# sourceMappingURL=controller.1f44909e.js.map

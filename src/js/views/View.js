@@ -6,13 +6,16 @@ import icons from 'url:../../img/icons.svg'; //url param is needed for Parcel2 t
 export default class View {
   _data;
 
-  render(data){
+  render(data, render = true){
     //Throw error if there is no data, or if received data is blank
     if(!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
 
     //recipe data from model.state.recipe is stored in #data
     this._data = data;
     const markup = this._generateMarkup();
+
+    if(!render) return markup;
+
     // Emptying container to remove 'please search for recipe' message
     this._clear();
     // Insert markup inside recipeContainer, before its first child
