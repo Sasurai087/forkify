@@ -6,6 +6,15 @@ import icons from 'url:../../img/icons.svg'; //url param is needed for Parcel2 t
 export default class View {
   _data;
 
+  /** 
+   *Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered (ex: recipe)
+   * @param {boolean} {render=true} If false, creates markup string instead of rendering to the DOM
+   * @returns {undefined | string} A markup string is returned if render is false
+   * @this {Object} View instance
+   * @author James Ohsako
+   * @todo Finish implementation
+  */
   render(data, render = true){
     //Throw error if there is no data, or if received data is blank
     if(!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
