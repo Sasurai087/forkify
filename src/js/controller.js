@@ -23,7 +23,6 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1) || '5ed6604691c37cdc054bd01c';
   
     //Load Spinner while awaiting recipe
-    if(!id) return;
     recipeView.renderSpinner()
 
     // 0. Update resultsView to mark selected search result
@@ -50,7 +49,7 @@ const controlSearchResults = async function() {
     resultsView.renderSpinner();
 
     // 1. Get search query
-    const query = searchView.getQuery();
+    const query = searchView.getQuery('') || 'curry';
     if(!query) return;
     
     // 2. Load search results
@@ -142,6 +141,8 @@ const init = function() {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerCLick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  controlSearchResults();
+  controlPagination(1);
 }
 
 init();
