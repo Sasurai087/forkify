@@ -132,6 +132,10 @@ const controlAddRecipe = async function(newRecipe) {
   }  
 }
 
+const experimentalBranch = function() {
+  console.log('Welcome to the beta branch!')
+}
+
 //Initialization
 const init = function() {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -143,6 +147,7 @@ const init = function() {
   addRecipeView.addHandlerUpload(controlAddRecipe);
   controlSearchResults();
   controlPagination(1);
+  experimentalBranch();
 }
 
 init();
